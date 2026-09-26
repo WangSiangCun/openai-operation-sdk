@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "team-operation-sdk"
+version = "0.1.0"
+description = "Proxy-locked, browser-fingerprint-aware SDK for Team seat operations"
+requires-python = ">=3.10"
+dependencies = ["requests>=2.31.0", "curl-cffi>=0.7.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
