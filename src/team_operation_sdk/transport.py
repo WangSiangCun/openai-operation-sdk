@@ -43,10 +43,11 @@ class ProxyFingerprintSession:
         if self.session.trust_env or dict(self.session.proxies) != self._proxies:
             raise TeamError("proxy_changed", "请求代理或环境代理已改变，已停止")
         try:
+            follow_redirects = kwargs.pop("allow_redirects", getattr(self, "follow_redirects", False))
             return self.session.request(method, url, headers=headers, params=params,
                                         json=json if json is not None else json_body,
                                         files=files, timeout=(10, 30),
-                                        allow_redirects=kwargs.pop("allow_redirects", False), **kwargs)
+                                        allow_redirects=follow_redirects, **kwargs)
         except (requests.RequestException, CffiRequestException):
             raise TeamError("network", "代理请求失败；没有回退直连") from None
 
