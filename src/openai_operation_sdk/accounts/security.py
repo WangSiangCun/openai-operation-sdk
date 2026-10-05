@@ -37,7 +37,7 @@ class AccountSecurityClient:
         if status not in (200, 201):
             code = "security_reauthentication" if status == 401 else "security_http_" + str(status)
             raise TeamError(code, "安全设置请求失败，请重新验证登录状态" if status == 401
-                            else f"安全设置接口返回 HTTP {status}", uncertain=mutation)
+                            else f"安全设置接口返回 HTTP {status}", uncertain=mutation and status != 401)
         try:
             body = response.json()
         except (ValueError, TypeError):

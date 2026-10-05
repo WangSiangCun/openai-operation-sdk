@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "openai-operation-sdk"
-version = "0.2.0"
+version = "0.2.1"
 readme = "README.md"
 description = "Modular proxy-locked OpenAI operations: Team workspaces and account security (unofficial)"
 requires-python = ">=3.10"

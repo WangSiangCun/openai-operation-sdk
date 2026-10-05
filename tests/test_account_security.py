@@ -108,4 +108,25 @@ def test_remote_error_body_is_not_exposed():
     with pytest.raises(TeamError) as error:
         c.enroll_totp(source="test")
     assert error.value.code == "security_reauthentication"
+    assert error.value.uncertain is False
     assert "private" not in str(error.value)
+
+
+@pytest.mark.parametrize('status', [403, 500, 502, 503])
+def test_other_mutation_rejections_stay_conservative(status):
+    c,t=client(web_session(),response({'error':'private'},status))
+    c.authenticate()
+    with pytest.raises(TeamError) as error:
+        c.enroll_totp(source='test')
+    assert error.value.uncertain is True
+    assert len(t.calls)==2
+
+
+def test_authentication_rejection_is_not_automatically_retried_by_sdk():
+    c,t=client(web_session(),response({},401))
+    c.authenticate()
+    with pytest.raises(TeamError) as error:
+        c.activate_totp('enrollment','123456',source='test')
+    assert error.value.code=='security_reauthentication'
+    assert error.value.uncertain is False
+    assert len(t.calls)==2
